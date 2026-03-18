@@ -1,0 +1,126 @@
+##############################################
+# 1. Secret – backend-specific credentials
+#    (DB creds come from postgres-secret)
+##############################################
+apiVersion: v1
+kind: Secret
+metadata:
+  name: backend-secret
+  labels:
+    app: backend
+type: Opaque
+stringData:
+  JWT_SECRET: change-me-to-a-strong-secret-key-32-chars-min
+  ADMIN_EMAILS: romananedandapani@gmail.com
+  SPRING_MAIL_USERNAME: iamromanane@gmail.com
+  SPRING_MAIL_PASSWORD: "kbyt wlaf dwdt emwc"
+
+---
+##############################################
+# 2. Deployment – runs the Spring Boot app
+##############################################
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  labels:
+    app: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: backend
+          image: reminder-backend:latest
+          imagePullPolicy: Never          # use local Minikube image
+          ports:
+            - containerPort: 9090
+          env:
+            # ---- Datasource (points to postgres Service) ----
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://postgres:5432/reminder_db
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: POSTGRES_USER
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: POSTGRES_PASSWORD
+            # ---- JWT ----
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secret
+                  key: JWT_SECRET
+            # ---- Admin ----
+            - name: ADMIN_EMAILS
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secret
+                  key: ADMIN_EMAILS
+            # ---- Mail ----
+            - name: SPRING_MAIL_HOST
+              value: smtp.gmail.com
+            - name: SPRING_MAIL_PORT
+              value: "587"
+            - name: SPRING_MAIL_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secret
+                  key: SPRING_MAIL_USERNAME
+            - name: SPRING_MAIL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secret
+                  key: SPRING_MAIL_PASSWORD
+            - name: SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH
+              value: "true"
+            - name: SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE
+              value: "true"
+          resources:
+            requests:
+              memory: "384Mi"
+              cpu: "250m"
+            limits:
+              memory: "768Mi"
+              cpu: "1000m"
+          readinessProbe:
+            tcpSocket:
+              port: 9090
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: 9090
+            initialDelaySeconds: 60
+            periodSeconds: 20
+
+---
+##############################################
+# 3. Service – exposes backend inside the
+#    cluster (and optionally via NodePort)
+##############################################
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+  labels:
+    app: backend
+spec:
+  type: NodePort
+  selector:
+    app: backend
+  ports:
+    - port: 9090
+      targetPort: 9090
+      nodePort: 30090
+      protocol: TCP

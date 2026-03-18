@@ -1,0 +1,43 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: reminder-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: reminder_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: DBkr-3101
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  backend:
+    build: ./backend
+    container_name: reminder-backend
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/reminder_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: DBkr-3101
+      JWT_SECRET: change-me-to-a-strong-secret-key-32-chars-min
+      ADMIN_EMAILS: romananedandapani@gmail.com
+    depends_on:
+      - postgres
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        REACT_APP_API_URL: http://localhost:9090
+    container_name: reminder-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:

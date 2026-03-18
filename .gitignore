@@ -1,0 +1,31 @@
+# Node.js dependencies
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Maven build
+target/
+.classpath
+.project
+.settings/
+*.class
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment variables
+.env
+.env.local
+
+# Build outputs
+build/
+dist/
+*.jar

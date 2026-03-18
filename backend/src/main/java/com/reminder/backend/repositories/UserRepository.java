@@ -1,0 +1,18 @@
+package com.reminder.backend.repositories;
+import com.reminder.backend.models.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Optional;
+
+@Repository
+public interface UserRepository extends JpaRepository<User,Long>{
+
+    Optional<User> findByEmail(String email);
+    List<User> findByUsernameContainingIgnoreCase(String username);
+    boolean existsByEmail(String email);
+    boolean existsByEmpId(Long empId);
+    Optional<User> findByEmpId(Long empId);
+}
+
