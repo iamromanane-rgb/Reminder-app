@@ -13,7 +13,7 @@ const Navbar = ({ onToggleSidebar }) => {
   };
 
   const accessLabel =
-    user?.accessLevel === 'read_write' ? 'Read / Write' : 'Read Only';
+    user?.accessLevel === 'read_write' ? 'Read / Write' : 'Read Only'; 
 
   return (
     <header className="navbar">

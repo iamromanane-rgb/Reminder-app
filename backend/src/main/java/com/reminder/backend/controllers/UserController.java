@@ -36,7 +36,7 @@ public class UserController {
     private AdminAccessService adminAccessService;
 
     @PostMapping
-    public ResponseEntity<?> createUser(@Valid @RequestBody CreateUserRequest request) {
+    public ResponseEntity<?> createUser(@Valid @RequestBody CreateUserRequest request) { //CreateUserRequest is a DTO that contains the fields needed to create a user
         if (userRepository.existsByEmail(request.getEmail())) {
             return ResponseEntity.status(409).body("email already exists");
         }
@@ -63,7 +63,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@Valid @RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> loginUser(@Valid @RequestBody LoginRequest loginRequest) { //LoginRequest is a DTO that contains email and password
         Optional<User> userOpt = userRepository.findByEmail(loginRequest.getEmail());
 
         if (userOpt.isPresent()) {

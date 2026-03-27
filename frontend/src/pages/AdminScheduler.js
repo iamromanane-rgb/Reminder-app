@@ -26,8 +26,8 @@ const AdminScheduler = () => {
     const fetchStatus = async () => {
       try {
         const { data } = await api.get('/api/scheduler');
-        setStatus(data);
-        setCron(data.cron || '');
+        setStatus(data); // data should have { scheduled: bool, cron: string } for example : { scheduled: true, cron: '0 0 6 * * *' }
+        setCron(data.cron || ''); 
       } catch {
         toast.error('Failed to load scheduler status');
       } finally {

@@ -12,7 +12,7 @@ import {
 } from 'react-icons/fi';
 import './Sidebar.css';
 
-const navItems = [
+const navItems = [ //list of navigation items for the sidebar, each with a route, label, and icon. These will be rendered as links in the sidebar, allowing users to navigate to different parts of the application.
   { to: '/dashboard', label: 'Dashboard', icon: <FiHome /> },
   { to: '/events', label: 'My Events', icon: <FiCalendar /> },
   { to: '/profile', label: 'Profile', icon: <FiUser /> },
@@ -26,7 +26,7 @@ const adminItems = [
 
 const Sidebar = ({ open, onClose }) => {
   const { isAdmin } = useAuth();
-  const location = useLocation();
+  const location = useLocation(); 
 
   return (
     <>
@@ -35,7 +35,7 @@ const Sidebar = ({ open, onClose }) => {
 
       <aside className={`sidebar ${open ? 'sidebar--open' : ''}`}>
         <div className="sidebar-header">
-          <span className="sidebar-logo">🔔 Reminder</span>
+          <span className="sidebar-logo">🔔 XUMO-Reminder</span>
           <button className="sidebar-close" onClick={onClose}>
             <FiX />
           </button>
@@ -60,7 +60,7 @@ const Sidebar = ({ open, onClose }) => {
           </ul>
 
           {isAdmin && (
-            <>
+            <> 
               <div className="sidebar-section">
                 <FiShield size={14} />
                 <span>Admin</span>

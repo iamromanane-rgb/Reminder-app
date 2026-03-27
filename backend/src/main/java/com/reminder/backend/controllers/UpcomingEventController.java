@@ -38,7 +38,7 @@ public class UpcomingEventController {
 
                     // Edge Case: If today is Dec 30 and event is Jan 1,
                     // 'currentYearDate' will be Jan 1, 2026 (Past), but we want Jan 1, 2027 (Future).
-                    if (currentYearDate.isBefore(today) || currentYearDate.equals(today.minusDays(1))) {
+                    if (currentYearDate.isBefore(today) || currentYearDate.equals(today.minusDays(1))) {// Handle edge case for year-end events
                         currentYearDate = currentYearDate.plusYears(1);
                     }
 

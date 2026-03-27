@@ -229,7 +229,7 @@ const AdminUsers = () => {
       {/* Edit Modal */}
       {editModal && (
         <div className="modal-overlay" onClick={() => setEditModal(null)}>
-          <div className="modal" onClick={(e) => e.stopPropagation()}>
+          <div className="modal" onClick={(e) => e.stopPropagation()}> 
             <h2>Edit User (Emp #{editModal.empId})</h2>
             <form onSubmit={handleUpdate}>
               <div className="form-group">

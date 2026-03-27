@@ -10,7 +10,6 @@ const Login = () => {
   const [form, setForm] = useState({ email: '', password: '' });
   const [loading, setLoading] = useState(false);
 
-  // If already logged in, redirect
   if (user) {
     navigate('/dashboard', { replace: true });
     return null;
@@ -38,7 +37,7 @@ const Login = () => {
         <div className="auth-header">
           <span className="auth-logo">🔔</span>
           <h1>Welcome Back</h1>
-          <p>Sign in to your Reminder account</p>
+          <p>Sign in to your XUMO-Reminder account</p>
         </div>
 
         <form onSubmit={handleSubmit}>

@@ -24,15 +24,15 @@ const formatDate = (dateStr) => {
 };
 
 const daysUntil = (dateStr) => {
-  const today = new Date(); // new Date() gives us the current date and time
+  const today = new Date();// new Date() gives us the current date and time
   today.setHours(0, 0, 0, 0);
-  const eventDate = new Date(dateStr + 'T00:00:00'); //  
+  const eventDate = new Date(dateStr + 'T00:00:00'); 
   const thisYear = eventDate;
   thisYear.setFullYear(today.getFullYear());
   if (thisYear < today) thisYear.setFullYear(today.getFullYear() + 1);
   const diff = Math.ceil((thisYear - today) / (1000 * 60 * 60 * 24));
   return diff;
-};
+}; 
 
 
 const Dashboard = () => {
@@ -52,7 +52,7 @@ const Dashboard = () => {
       }
     };
     fetchUpcoming();
-  }, []);
+  }, []); // Refetch if number of events changes, to keep the dashboard up to date after edits
 
   return (
     <div className="dashboard">
@@ -60,8 +60,6 @@ const Dashboard = () => {
         <h1>👋 Hello, {user?.username}</h1>
         <p>Here's what's coming up in the next 7 days</p>
       </div>
-
-      {/* Summary stats */}
       <div className="stats-grid">
         <div className="card stat-card">
           <div className="stat-icon stat-icon--purple">

@@ -9,7 +9,7 @@ export const useAuth = () => {
   return ctx;
 };
 
-export const AuthProvider = ({ children }) => {
+export const AuthProvider = ({ children }) => { //functional component that provides authentication context to its children components. It manages user authentication state, including login, registration, and logout functionality, as well as checking for admin status and restoring sessions from localStorage.
   const [user, setUser] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -37,7 +37,7 @@ export const AuthProvider = ({ children }) => {
         checkAdminStatus().finally(() => setLoading(false));
       } catch {
         localStorage.clear();
-        setLoading(false);
+        setLoading(false); 
       }
     } else {
       setLoading(false);
@@ -66,7 +66,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   /** Convenience booleans */
-  const canWrite = user?.accessLevel === 'read_write'; 
+  const canWrite = user?.accessLevel === 'read_write'; //const and not boolean function because we only need to check this once when user state changes, not on every render
 
   return (
     <AuthContext.Provider

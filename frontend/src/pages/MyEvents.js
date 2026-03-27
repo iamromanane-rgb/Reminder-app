@@ -41,9 +41,7 @@ const MyEvents = () => {
     }
     try {
       setLoading(true);
-      const { data } = await api.get(
-        `/api/users/${userId}/events/search?keyword=${encodeURIComponent(search)}` //encodeURIComponent is used to safely encode the search keyword, handling spaces and special characters properly in the URL.
-      );
+      const { data } = await api.get( `/api/users/${userId}/events/search?keyword=${encodeURIComponent(search)}`); //encodeURIComponent is used to safely encode the search keyword, handling spaces and special characters properly in the URL.
       setEvents(data);
     } catch {
       toast.error('Search failed');
@@ -71,7 +69,7 @@ const MyEvents = () => {
 
   /* Save (create / update) */
   const handleSave = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Prevent the default form submission behavior, which would cause a page reload. We want to handle the submission with our own logic instead.
     setSaving(true);
     try {
       if (editing) {
