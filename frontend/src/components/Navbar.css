@@ -77,6 +77,25 @@
   background: var(--color-danger-light);
 }
 
+.navbar-theme-btn {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  color: var(--color-text-secondary);
+  padding: 6px;
+  border-radius: var(--radius-sm);
+  transition: all var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.navbar-theme-btn:hover {
+  color: var(--color-primary);
+  background: var(--color-primary-50);
+}
+
 @media (max-width: 768px) {
   .navbar {
     left: 0;

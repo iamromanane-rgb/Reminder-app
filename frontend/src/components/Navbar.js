@@ -1,10 +1,12 @@
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 import { useNavigate } from 'react-router-dom';
-import { FiMenu, FiLogOut, FiShield } from 'react-icons/fi';
+import { FiMenu, FiLogOut, FiShield, FiMoon, FiSun } from 'react-icons/fi';
 import './Navbar.css';
 
 const Navbar = ({ onToggleSidebar }) => {
   const { user, isAdmin, logout } = useAuth();
+  const { isDark, toggleTheme } = useTheme();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -38,6 +40,14 @@ const Navbar = ({ onToggleSidebar }) => {
           <span className="navbar-username">{user?.username}</span>
           <span className="navbar-email">{user?.email}</span>
         </div>
+        <button
+          className="navbar-theme-btn"
+          onClick={toggleTheme}
+          title={isDark ? 'Light mode' : 'Dark mode'}
+          aria-label="Toggle theme"
+        >
+          {isDark ? <FiSun size={18} /> : <FiMoon size={18} />}
+        </button>
         <button className="navbar-logout" onClick={handleLogout} title="Logout">
           <FiLogOut />
         </button>
