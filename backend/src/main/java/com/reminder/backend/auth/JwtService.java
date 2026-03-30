@@ -40,7 +40,7 @@ public class JwtService {
                 .issuedAt(now)
                 .expiration(expiry)
                 .signWith(signingKey)//final approval with hashed signkey
-                .compact();//squashes everything together
+                .compact();//squashes everything together to create the final token string
     }
 
     public boolean isTokenValid(String token) {

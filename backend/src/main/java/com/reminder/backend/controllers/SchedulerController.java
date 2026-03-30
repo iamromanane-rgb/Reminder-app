@@ -66,5 +66,5 @@ public class SchedulerController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication != null ? (String) authentication.getPrincipal() : null;
         return adminAccessService.isAdmin(email);
-    } //checks email from jwtauthfilter
+    }
 }
