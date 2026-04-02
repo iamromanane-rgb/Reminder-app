@@ -46,6 +46,33 @@
   margin-top: 2px;
 }
 
+/* Timeframe selector */
+.timeframe-selector {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.timeframe-label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-text);
+  min-width: fit-content;
+}
+
+.timeframe-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.timeframe-buttons .btn {
+  white-space: nowrap;
+}
+
 /* Event grid */
 .event-grid {
   display: grid;

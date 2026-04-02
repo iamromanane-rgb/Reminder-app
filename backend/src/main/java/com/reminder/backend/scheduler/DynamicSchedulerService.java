@@ -16,8 +16,8 @@ public class DynamicSchedulerService {
     private final NotificationScheduler notificationScheduler;
     private final String defaultCron;
 
-    private ScheduledFuture<?> scheduledFuture; //holds current scheduler
-    private volatile String currentCron; //where error came
+    private ScheduledFuture<?> scheduledFuture;// current scheduled task
+    private volatile String currentCron; // current cron expression for reference - can be accessed by multiple threads
 
     public DynamicSchedulerService(
             TaskScheduler taskScheduler,
@@ -38,13 +38,13 @@ public class DynamicSchedulerService {
         CronExpression.parse(cronExpression); //validity chk
 
         if (scheduledFuture != null) {
-            scheduledFuture.cancel(false);
+            scheduledFuture.cancel(false); // stop current scheduler
         }
 
         scheduledFuture = taskScheduler.schedule(
-                notificationScheduler::checkAndSendReminders,
-                new CronTrigger(cronExpression)
-        ); //starts fresh timer
+                notificationScheduler::checkAndSendReminders, //the method to run
+                new CronTrigger(cronExpression) //when to run it
+        ); //starts fresh timer, that is, a new scheduler
         currentCron = cronExpression;
     }
 

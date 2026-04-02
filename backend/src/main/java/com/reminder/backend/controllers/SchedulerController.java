@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/scheduler")
 @CrossOrigin(origins = "http://localhost:3000")
-@SecurityRequirement(name = "bearerAuth")
+@SecurityRequirement(name = "bearerAuth") // swagger-ui documentation annotation
 public class SchedulerController {
 
     private final DynamicSchedulerService dynamicSchedulerService;
@@ -32,8 +32,8 @@ public class SchedulerController {
                     org.springframework.http.HttpStatus.FORBIDDEN, "admin access required");
         }
         return new SchedulerStatus(
-                dynamicSchedulerService.getCurrentCron(),
-                dynamicSchedulerService.isScheduled()
+                dynamicSchedulerService.getCurrentCron(), // 0 0 6 * * *
+                dynamicSchedulerService.isScheduled() //boolean
         );
     }
 

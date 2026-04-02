@@ -28,7 +28,7 @@ public class AdminBroadcastEmailService {
     }
 
     public AdminBroadcastEmailResult broadcast(String subject, String body) {
-        Set<String> recipients = new LinkedHashSet<>();
+        Set<String> recipients = new LinkedHashSet<>();//faster lookup, maintains order of insertion and no duplicates
         for (User user : userRepository.findAll()) {
             if (user.getEmail() != null && !user.getEmail().isBlank()) {
                 recipients.add(user.getEmail().trim().toLowerCase());

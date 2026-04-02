@@ -152,7 +152,7 @@ public class NotificationScheduler {
         }
         try {
             MimeMessage message = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, "UTF-8");
+            MimeMessageHelper helper = new MimeMessageHelper(message, "UTF-8"); //formatting and adding fields
             helper.setFrom(mailFrom);
             helper.setTo(to);
             if (cc != null && !cc.isBlank() && !cc.equalsIgnoreCase(to)) {

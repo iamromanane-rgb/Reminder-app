@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
@@ -24,11 +25,13 @@ public class UpcomingEventController {
     private EventRepository eventRepository;
 
     @GetMapping
-    public List<Event> getUpcomingEvents() {
+    public List<Event> getUpcomingEvents(
+            @RequestParam(value = "days", defaultValue = "7") int days
+    ) {
         List<Event> allEvents = eventRepository.findAll();
 
         LocalDate today = LocalDate.now();
-        LocalDate nextWeek = today.plusDays(7);
+        LocalDate endDate = today.plusDays(days);
 
         return allEvents.stream()
                 .filter(event -> {
@@ -42,8 +45,8 @@ public class UpcomingEventController {
                         currentYearDate = currentYearDate.plusYears(1);
                     }
 
-                    // Check if the adjusted date falls within the next 7 days
-                    return !currentYearDate.isBefore(today) && !currentYearDate.isAfter(nextWeek);
+                    // Check if the adjusted date falls within the specified time range
+                    return !currentYearDate.isBefore(today) && !currentYearDate.isAfter(endDate);
                 })
 
                 .sorted(Comparator.comparing(e -> {

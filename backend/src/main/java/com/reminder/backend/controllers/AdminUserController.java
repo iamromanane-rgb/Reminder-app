@@ -26,6 +26,7 @@ public class AdminUserController {
     public AdminUserController(UserRepository userRepository, AdminAccessService adminAccessService) {
         this.userRepository = userRepository;
         this.adminAccessService = adminAccessService;
+
     }
 
     @GetMapping("/search/empid")

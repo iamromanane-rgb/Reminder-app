@@ -21,13 +21,69 @@ const Register = () => {
     return null;
   }
 
+  // Password strength validation function
+  const validatePasswordStrength = (pwd) => {
+    const hasUppercase = /[A-Z]/.test(pwd); // At least one capital letter
+    const hasLowercase = /[a-z]/.test(pwd); // At least one small letter
+    const hasNumber = /[0-9]/.test(pwd); // At least one number
+    const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(pwd); // At least one special character
+    
+    return {
+      hasUppercase,
+      hasLowercase,
+      hasNumber,
+      hasSpecialChar,
+      isStrong: hasUppercase && hasLowercase && hasNumber && hasSpecialChar,
+    };
+  };
+
+  // Get password strength feedback
+  const getPasswordStrengthFeedback = () => {
+    const strength = validatePasswordStrength(form.password);
+    const issues = [];
+    if (!strength.hasUppercase) issues.push('uppercase letter');
+    if (!strength.hasLowercase) issues.push('lowercase letter');
+    if (!strength.hasNumber) issues.push('number');
+    if (!strength.hasSpecialChar) issues.push('special character');
+    return issues;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Password strength validation
+    const strength = validatePasswordStrength(form.password);
+    if (!strength.isStrong) {
+      const issues = getPasswordStrengthFeedback();
+      toast.error(`Password must contain: ${issues.join(', ')}`);
+      return;
+    }
 
     if (form.password !== form.confirmPassword) {
       toast.error('Passwords do not match');
       return;
     }
+
+    if (form.password.length < 8) {
+      toast.error('Password must be at least 8 characters long');
+      return;
+    }
+
+    if(form.password.length > 100) {
+      toast.error('Password must be less than 100 characters long');
+      return;
+    }
+
+    if(form.password.toLowerCase().includes('password')) {
+      toast.error('Password should not contain the word "password"');
+      return;
+    }
+
+    if(form.password.toLowerCase().includes(form.username.toLowerCase())) {
+      toast.error('Password should not contain your username');
+      return;
+    }
+    
 
     setLoading(true);
     try {
@@ -100,6 +156,26 @@ const Register = () => {
                 required
                 minLength={6}
               />
+              {form.password && (
+                <div className="password-strength">
+                  {(() => {
+                    const strength = validatePasswordStrength(form.password);
+                    return (
+                      <>
+                        <div className={`strength-indicator ${strength.isStrong ? 'strong' : 'weak'}`}>
+                          <span className={strength.hasUppercase ? '✓' : '✗'}>A</span>
+                          <span className={strength.hasLowercase ? '✓' : '✗'}>a</span>
+                          <span className={strength.hasNumber ? '✓' : '✗'}>1</span>
+                          <span className={strength.hasSpecialChar ? '✓' : '✗'}>!</span>
+                        </div>
+                        <small className={strength.isStrong ? 'text-success' : 'text-warning'}>
+                          {strength.isStrong ? '✓ Strong password' : '⚠ Weak password'}
+                        </small>
+                      </>
+                    );
+                  })()}
+                </div>
+              )}
             </div>
 
             <div className="form-group">

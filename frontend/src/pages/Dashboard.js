@@ -35,15 +35,43 @@ const daysUntil = (dateStr) => {
 }; 
 
 
+const TIMEFRAME_OPTIONS = [
+  { label: 'Next 7 Days', value: 7 },
+  { label: 'Next 30 Days', value: 30 },
+  { label: 'Next 90 Days', value: 90 },
+  { label: 'Next Year', value: 365 },
+];
+
+const filterEventsByTimeframe = (allEvents, days) => {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const cutoffDate = new Date(today);
+  cutoffDate.setDate(cutoffDate.getDate() + days);
+
+  return allEvents.filter((event) => {
+    const eventDate = new Date(event.eventDate + 'T00:00:00');
+    const thisYear = new Date(eventDate);
+    thisYear.setFullYear(today.getFullYear());
+
+    // If event has already passed this year, move to next year
+    if (thisYear < today) {
+      thisYear.setFullYear(today.getFullYear() + 1);
+    }
+
+    return thisYear <= cutoffDate;
+  });
+};
+
 const Dashboard = () => {
   const { user } = useAuth();
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedTimeframe, setSelectedTimeframe] = useState(7);
 
   useEffect(() => {
     const fetchUpcoming = async () => {
       try {
-        const { data } = await api.get('/upcoming');
+        const { data } = await api.get(`/upcoming?days=${selectedTimeframe}`);
         setEvents(data);
       } catch (err) {
         console.error('Failed to load upcoming events', err);
@@ -52,14 +80,36 @@ const Dashboard = () => {
       }
     };
     fetchUpcoming();
-  }, []); // Refetch if number of events changes, to keep the dashboard up to date after edits
+  }, [selectedTimeframe]); // Refetch if number of events changes, to keep the dashboard up to date after edits
+
+  const getTimeframeLabel = () => {
+    const option = TIMEFRAME_OPTIONS.find(opt => opt.value === selectedTimeframe);
+    return option ? option.label.toLowerCase() : 'next 7 days';
+  };
 
   return (
     <div className="dashboard">
       <div className="page-header">
         <h1>👋 Hello, {user?.username}</h1>
-        <p>Here's what's coming up in the next 7 days</p>
+        <p>Here's what's coming up {getTimeframeLabel()}</p>
       </div>
+
+      {/* Timeframe selector */}
+      <div className="timeframe-selector card">
+        <span className="timeframe-label">View events for:</span>
+        <div className="timeframe-buttons">
+          {TIMEFRAME_OPTIONS.map((option) => (
+            <button
+              key={option.value}
+              className={`btn btn-sm ${selectedTimeframe === option.value ? 'btn-primary' : 'btn-secondary'}`}
+              onClick={() => setSelectedTimeframe(option.value)}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
       <div className="stats-grid">
         <div className="card stat-card">
           <div className="stat-icon stat-icon--purple">
@@ -102,8 +152,8 @@ const Dashboard = () => {
       ) : events.length === 0 ? (
         <div className="empty-state card">
           <div className="empty-state-icon">🎉</div>
-          <p>No events in the next 7 days.</p>
-          <p style={{ fontSize: '0.8rem', marginTop: 4 }}>Enjoy the quiet week!</p>
+          <p>No events {getTimeframeLabel()}.</p>
+          <p style={{ fontSize: '0.8rem', marginTop: 4 }}>Try selecting a longer timeframe!</p>
         </div>
       ) : (
         <div className="event-grid">
